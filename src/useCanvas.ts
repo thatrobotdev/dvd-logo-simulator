@@ -1,14 +1,21 @@
-// @ts-nocheck
 import {useEffect, useRef} from "react";
+import {Draw} from "./types";
 
-const useCanvas = (draw) => {
-  const canvasRef = useRef(null);
+interface Params {
+  draw: Draw;
+}
+
+const useCanvas = (params: Params) => {
+  const {draw} = params;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (!canvasRef.current) return;
+
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
     let frameCount = 0;
-    let animationFrameId;
+    let animationFrameId: number;
 
     const render = () => {
       frameCount++;

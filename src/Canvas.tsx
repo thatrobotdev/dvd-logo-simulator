@@ -1,9 +1,13 @@
-// @ts-nocheck
+import { Draw } from "./types";
 import useCanvas from "./useCanvas";
 
-const Canvas = (props) => {
+interface Props {
+  draw: Draw
+}
+
+const Canvas = (props: Props) => {
   const {draw, ...rest} = props;
-  const canvasRef = useCanvas(draw);
+  const canvasRef = useCanvas({draw});
 
   return <canvas ref={canvasRef} {...rest} />;
 };

@@ -1,8 +1,7 @@
-// @ts-nocheck
 import Canvas from "./Canvas";
 
 function App() {
-  const draw = (ctx, frameCount) => {
+  const draw = (ctx: CanvasRenderingContext2D, frameCount: number) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillStyle = "#000000";
     ctx.beginPath();
