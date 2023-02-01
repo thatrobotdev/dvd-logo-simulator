@@ -15,18 +15,12 @@ const Canvas = (props: Props) => {
     animationFrameId: 0,
   });
 
-  const resizeCanvas = (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
-  ) => {
+  const resizeCanvas = (canvas: HTMLCanvasElement) => {
     const {width, height} = canvas.getBoundingClientRect();
 
     if (canvas.width !== width || canvas.height !== height) {
-      // Using pixel density for scaling ensures animation looks correct on retina displays
-      const {devicePixelRatio: ratio = 1} = window;
-      canvas.width = width * ratio;
-      canvas.height = height * ratio;
-      ctx.scale(ratio, ratio);
+      canvas.width = width;
+      canvas.height = height;
     }
   };
 
@@ -37,16 +31,22 @@ const Canvas = (props: Props) => {
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     const timers = timersRef.current;
 
-    
+    resizeCanvas(canvas);
+
     const tick = (timestamp: number) => {
       if (timers.start === null) {
         timers.start = timestamp;
       }
       // Using elapsed time to drive animation ensures consistent speed regardless of screen refresh rate
       timers.elapsed = timestamp - timers.start;
-      
-      resizeCanvas(canvas, ctx);
-      draw(ctx, timers.elapsed);
+
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      draw({
+        ctx,
+        elapsed: timers.elapsed,
+        synth: null,
+        isAudioReady: false,
+      });
       timers.animationFrameId = window.requestAnimationFrame(tick);
     };
 
@@ -58,7 +58,11 @@ const Canvas = (props: Props) => {
   }, [draw]);
 
   return (
-    <canvas ref={canvasRef} {...rest} style={{width: "100vw", height: "100vh"}}>
+    <canvas
+      ref={canvasRef}
+      {...rest}
+      style={{width: 500, height: 500, border: "1px solid black"}}
+    >
       <p>Alt text here</p>
     </canvas>
   );

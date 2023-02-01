@@ -1,15 +1,25 @@
 import Canvas from "./Canvas";
+import useLogoAnimation from "./useLogoAnimation";
 
 function App() {
-  const draw = (ctx: CanvasRenderingContext2D, elapsed: number) => {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    ctx.arc(50, 100, 20 * Math.sin(elapsed * 0.0005) ** 2, 0, 2 * Math.PI);
-    ctx.fill();
-  };
+  const {addCircle, draw} = useLogoAnimation();
 
-  return <Canvas draw={draw} />;
+  return (
+    <>
+      <Canvas draw={draw} />
+      <button
+        onClick={addCircle}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 0,
+        }}
+      >
+        Add logo
+      </button>
+    </>
+  );
 }
 
 export default App;
