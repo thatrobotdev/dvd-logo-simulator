@@ -1,14 +1,23 @@
 import Canvas from "./Canvas";
 import useLogoAnimation from "./useLogoAnimation";
+import DVDlogo from "./DVDLogo.png";
+import {useRef, useState} from "react";
 
 function App() {
-  const {addCircle, draw} = useLogoAnimation();
+  const logoRef = useRef(null);
+  const [isImgLoading, setIsImgLoading] = useState(false);
+
+  const onImgLoad = () => {
+    setIsImgLoading(false);
+  };
+
+  const {addLogo, draw} = useLogoAnimation(logoRef, isImgLoading);
 
   return (
     <>
       <Canvas draw={draw} />
       <button
-        onClick={addCircle}
+        onClick={addLogo}
         style={{
           position: "absolute",
           top: 0,
@@ -18,6 +27,17 @@ function App() {
       >
         Add logo
       </button>
+      <div style={{display: "none"}}>
+        {/* eslint-disable-next-line jsx-a11y/alt-text */}
+        <img
+          id="DVDlogo"
+          src={DVDlogo}
+          width="320"
+          height="163"
+          ref={logoRef}
+          onLoad={onImgLoad}
+        />
+      </div>
     </>
   );
 }

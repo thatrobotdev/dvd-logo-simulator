@@ -1,9 +1,9 @@
-import {useRef} from "react";
-import {Circle} from "./Circle";
+import {MutableRefObject, useRef} from "react";
+import {DVDLogo} from "./DVDLogo";
 import {DrawParams} from "./types";
 
 export class Animation {
-  circles: Circle[];
+  logos: DVDLogo[];
   prevElapsedTime = 0;
   timeSinceLastStep = 0;
   speed = 500;
@@ -12,20 +12,23 @@ export class Animation {
   frameCount = 0;
 
   constructor() {
-    this.circles = [];
+    this.logos = [];
   }
 }
 
-const useLogoAnimation = () => {
+const useLogoAnimation = (
+  logoRef: MutableRefObject<null>,
+  isImgLoading: boolean
+) => {
   const animation = useRef(new Animation()).current;
 
-  const addCircle = () => {
-    for (let i = 0; i < 50; i++) {
-      animation.circles.push(new Circle(animation.distancePerStep));
-    }
+  const addLogo = () => {
+    animation.logos.push(new DVDLogo(animation.distancePerStep, logoRef));
   };
 
   const draw = (params: DrawParams) => {
+    if (isImgLoading) return;
+
     const {ctx, elapsed, synth, isAudioReady} = params;
 
     // Skip the first step, because >1 step is needed to calculate timeSinceLastStep
@@ -43,10 +46,10 @@ const useLogoAnimation = () => {
 
     // Add the first circle
     if (animation.frameCount === 2) {
-      animation.circles.push(new Circle(animation.distancePerStep));
+      addLogo();
     }
 
-    animation.circles.forEach((circle) => {
+    animation.logos.forEach((circle) => {
       circle.step(
         animation.distancePerStep,
         animation.prevDistancePerStep,
@@ -62,7 +65,7 @@ const useLogoAnimation = () => {
     animation.frameCount++;
   };
 
-  return {addCircle, draw};
+  return {addLogo, draw};
 };
 
 export default useLogoAnimation;

@@ -1,10 +1,12 @@
+import {MutableRefObject} from "react";
 import {getRandomInt, getRandomVector} from "./utils";
 
-export class Circle {
+export class DVDLogo {
   x: number;
   y: number;
   deltaX: number;
   deltaY: number;
+  logoRef: MutableRefObject<null>;
 
   isFirstStep = true;
   isMaxX = false;
@@ -13,14 +15,16 @@ export class Circle {
   isMinY = false;
   radius = 12;
   color = "blue";
-  speed = 100;
+  width = 64;
+  height = 33;
 
-  constructor(distancePerStep: number) {
+  constructor(distancePerStep: number, logoRef: MutableRefObject<null>) {
     const {deltaX, deltaY} = getRandomVector(distancePerStep);
     this.x = getRandomInt(100, 200);
     this.y = getRandomInt(100, 200);
     this.deltaX = deltaX;
     this.deltaY = deltaY;
+    this.logoRef = logoRef;
   }
 
   /* For steps other than first step, scale the delta
@@ -52,7 +56,7 @@ export class Circle {
     }
   };
 
-  /* Check if velocity values on this step would cause circle to exit canvas.
+  /* Check if velocity values on this step would cause circle to exit canvas on next step.
    * If so, set flags so that direction will change on the next step
    * Also, trigger sounds!
    */
@@ -61,28 +65,27 @@ export class Circle {
     isAudioReady: boolean,
     synth: any
   ) => {
-    if (this.x + this.deltaX > ctx.canvas.width - this.radius) {
+    if (this.x + this.deltaX > ctx.canvas.width - this.width) {
       this.isMaxX = true;
       isAudioReady && synth.triggerAttackRelease("C4", "8n");
-    } else if (this.x + this.deltaX < 0 + this.radius) {
+    } else if (this.x + this.deltaX < 0 + this.width) {
       this.isMinX = true;
       isAudioReady && synth.triggerAttackRelease("D4", "8n");
     }
-    if (this.y + this.deltaY > ctx.canvas.height - this.radius) {
+    if (this.y + this.deltaY > ctx.canvas.height - this.height) {
       this.isMaxY = true;
       isAudioReady && synth.triggerAttackRelease("E4", "8n");
-    } else if (this.y + this.deltaY < 0 + this.radius) {
+    } else if (this.y + this.deltaY < 0 + this.height) {
       this.isMinY = true;
       isAudioReady && synth.triggerAttackRelease("F4", "8n");
     }
   };
 
   private paint = (ctx: CanvasRenderingContext2D) => {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.fillStyle = this.color;
-    ctx.fill();
+    const imgNode = this.logoRef.current;
+    if (imgNode) {
+      ctx.drawImage(imgNode, this.x, this.y, this.width, this.height);
+    }
   };
 
   /* Move drawing position for next step, based on the circle's delta values.
