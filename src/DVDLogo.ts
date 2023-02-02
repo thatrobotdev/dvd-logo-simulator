@@ -8,7 +8,6 @@ export class DVDLogo {
   deltaY: number;
   logoRef: MutableRefObject<null>;
 
-  isFirstStep = true;
   isMaxX = false;
   isMinX = false;
   isMaxY = false;
@@ -111,16 +110,14 @@ export class DVDLogo {
   step = (
     distancePerStep: number,
     prevDistancePerStep: number,
+    frameCount: number,
     ctx: CanvasRenderingContext2D,
     isAudioReady: boolean,
     synth: any
   ) => {
-    if (this.isFirstStep) {
-      this.isFirstStep = false;
-    } else {
-      this.setVector(distancePerStep, prevDistancePerStep);
-    }
+    if (frameCount === 0) return;
 
+    this.setVector(distancePerStep, prevDistancePerStep);
     this.detectCollisions(ctx, isAudioReady, synth);
     this.moveDrawingPosition(ctx);
     this.paint(ctx);

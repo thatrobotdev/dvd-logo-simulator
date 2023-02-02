@@ -4,11 +4,8 @@ import {DrawParams} from "./types";
 
 export class Animation {
   logos: DVDLogo[];
-  prevElapsedTime = 0;
-  timeSinceLastStep = 0;
-  speed = 500;
-  distancePerStep = 0;
-  prevDistancePerStep = 0;
+  distancePerStep = 2;
+  prevDistancePerStep = 2;
   frameCount = 0;
 
   constructor() {
@@ -29,39 +26,26 @@ const useLogoAnimation = (
   const draw = (params: DrawParams) => {
     if (isImgLoading) return;
 
-    const {ctx, elapsed, synth, isAudioReady} = params;
-
-    // Skip the first step, because >1 step is needed to calculate timeSinceLastStep
-    if (animation.frameCount === 0) {
-      animation.frameCount++;
-      return;
-    }
-
-    // Keep track of time between steps
-    animation.timeSinceLastStep = elapsed - animation.prevElapsedTime;
-
-    // Calculate how far the circles should move on this step
-    animation.distancePerStep =
-      (animation.timeSinceLastStep / 1000) * animation.speed;
+    const {ctx, synth, isAudioReady} = params;
 
     // Add the first circle
-    if (animation.frameCount === 2) {
+    if (animation.frameCount === 0) {
       addLogo();
     }
 
-    animation.logos.forEach((circle) => {
-      circle.step(
+    animation.logos.forEach((logo) => {
+      logo.step(
         animation.distancePerStep,
         animation.prevDistancePerStep,
+        animation.frameCount,
         ctx,
         isAudioReady,
         synth
       );
-
-      animation.prevDistancePerStep = animation.distancePerStep;
     });
 
-    animation.prevElapsedTime = elapsed;
+    animation.prevDistancePerStep = animation.distancePerStep;
+
     animation.frameCount++;
   };
 

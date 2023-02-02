@@ -8,10 +8,7 @@ interface Props {
 const Canvas = (props: Props) => {
   const {draw, ...rest} = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const timersRef = useRef<Timers>({
-    start: 0,
-    previousTimestamp: 0,
-    elapsed: 0,
+  const animationRef = useRef<Timers>({
     animationFrameId: 0,
   });
 
@@ -29,31 +26,25 @@ const Canvas = (props: Props) => {
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    const timers = timersRef.current;
+    const animation = animationRef.current;
 
     resizeCanvas(canvas);
 
-    const tick = (timestamp: number) => {
-      if (timers.start === null) {
-        timers.start = timestamp;
-      }
-      // Using elapsed time to drive animation ensures consistent speed regardless of screen refresh rate
-      timers.elapsed = timestamp - timers.start;
-
+    const tick = () => {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       draw({
         ctx,
-        elapsed: timers.elapsed,
         synth: null,
         isAudioReady: false,
       });
-      timers.animationFrameId = window.requestAnimationFrame(tick);
+
+      animation.animationFrameId = window.requestAnimationFrame(tick);
     };
 
-    tick(0);
+    tick();
 
     return () => {
-      window.cancelAnimationFrame(timers.animationFrameId);
+      window.cancelAnimationFrame(animation.animationFrameId);
     };
   }, [draw]);
 
