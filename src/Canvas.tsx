@@ -29,7 +29,7 @@ const Canvas = (props: Props) => {
     resizeCanvas(canvas);
 
     const step = () => {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       draw({
         ctx,
         synth: null,
@@ -53,7 +53,7 @@ const Canvas = (props: Props) => {
   const manualStep = () => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     draw({
       ctx,
       synth: null,
@@ -69,9 +69,9 @@ const Canvas = (props: Props) => {
         {...rest}
         style={{width: 500, height: 500, border: "1px solid black"}}
       >
-        <p>Alt text here</p>
+        <p>Bouncing DVD Logo Simulator</p>
       </canvas>
-      <button onClick={manualStep}>STEP 1</button>
+      {debug ? <button onClick={manualStep}>STEP</button> : null}
     </>
   );
 };

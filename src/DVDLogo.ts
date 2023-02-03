@@ -58,7 +58,7 @@ export class DVDLogo {
    * If so, set flags so that direction will change on the next step
    * Also, trigger sounds!
    */
-  private detectCollisions = (
+  private detectEdgeCollision = (
     ctx: CanvasRenderingContext2D,
     isAudioReady: boolean,
     synth: any
@@ -77,6 +77,10 @@ export class DVDLogo {
       this.isMinY = true;
       isAudioReady && synth.triggerAttackRelease("F4", "8n");
     }
+  };
+
+  private detectObjectCollision = () => {
+    // TODO
   };
 
   private paint = (ctx: CanvasRenderingContext2D) => {
@@ -117,7 +121,8 @@ export class DVDLogo {
     if (frameCount === 0) return;
 
     this.setVector(distancePerStep, prevDistancePerStep);
-    this.detectCollisions(ctx, isAudioReady, synth);
+    this.detectEdgeCollision(ctx, isAudioReady, synth);
+    this.detectObjectCollision();
     this.moveDrawingPosition(ctx);
     this.paint(ctx);
   };

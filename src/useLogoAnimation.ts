@@ -19,7 +19,7 @@ const useLogoAnimation = (
 ) => {
   const animation = useRef(new Animation()).current;
 
-  const addLogo = () => {
+  const spawn = () => {
     animation.logos.push(new DVDLogo(animation.distancePerStep, logoRef));
   };
 
@@ -30,7 +30,7 @@ const useLogoAnimation = (
 
     // Add the first circle
     if (animation.frameCount === 0) {
-      addLogo();
+      spawn();
     }
 
     animation.logos.forEach((logo) => {
@@ -53,7 +53,7 @@ const useLogoAnimation = (
     animation.frameCount++;
   };
 
-  return {addLogo, draw};
+  return {addLogo: spawn, draw};
 };
 
 export default useLogoAnimation;
