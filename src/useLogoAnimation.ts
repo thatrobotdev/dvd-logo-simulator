@@ -4,8 +4,8 @@ import {DrawParams} from "./types";
 
 export class Animation {
   logos: DVDLogo[];
-  distancePerStep = 2;
-  prevDistancePerStep = 2;
+  distancePerStep = 5;
+  prevDistancePerStep = 5;
   frameCount = 0;
 
   constructor() {
@@ -26,7 +26,7 @@ const useLogoAnimation = (
   const draw = (params: DrawParams) => {
     if (isImgLoading) return;
 
-    const {ctx, synth, isAudioReady} = params;
+    const {ctx, synth, isAudioReady, debug} = params;
 
     // Add the first circle
     if (animation.frameCount === 0) {
@@ -43,6 +43,10 @@ const useLogoAnimation = (
         synth
       );
     });
+
+    if (debug) {
+      console.log(animation.logos[0]);
+    }
 
     animation.prevDistancePerStep = animation.distancePerStep;
 

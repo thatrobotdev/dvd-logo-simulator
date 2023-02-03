@@ -12,7 +12,6 @@ export class DVDLogo {
   isMinX = false;
   isMaxY = false;
   isMinY = false;
-  radius = 12;
   color = "blue";
   width = 64;
   height = 33;
@@ -67,14 +66,14 @@ export class DVDLogo {
     if (this.x + this.deltaX > ctx.canvas.width - this.width) {
       this.isMaxX = true;
       isAudioReady && synth.triggerAttackRelease("C4", "8n");
-    } else if (this.x + this.deltaX < 0 + this.width) {
+    } else if (this.x + this.deltaX < 0) {
       this.isMinX = true;
       isAudioReady && synth.triggerAttackRelease("D4", "8n");
     }
     if (this.y + this.deltaY > ctx.canvas.height - this.height) {
       this.isMaxY = true;
       isAudioReady && synth.triggerAttackRelease("E4", "8n");
-    } else if (this.y + this.deltaY < 0 + this.height) {
+    } else if (this.y + this.deltaY < 0) {
       this.isMinY = true;
       isAudioReady && synth.triggerAttackRelease("F4", "8n");
     }
@@ -96,14 +95,14 @@ export class DVDLogo {
     this.x += this.deltaX;
     this.y += this.deltaY;
     if (this.isMaxX) {
-      this.x = ctx.canvas.width - this.radius;
+      this.x = ctx.canvas.width - this.width;
     } else if (this.isMinX) {
-      this.x = 0 + this.radius;
+      this.x = 0;
     }
     if (this.isMaxY) {
-      this.y = ctx.canvas.height - this.radius;
+      this.y = ctx.canvas.height - this.height;
     } else if (this.isMinY) {
-      this.y = 0 + this.radius;
+      this.y = 0;
     }
   };
 

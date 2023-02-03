@@ -6,6 +6,7 @@ import {useRef, useState} from "react";
 function App() {
   const logoRef = useRef(null);
   const [isImgLoading, setIsImgLoading] = useState(false);
+  const DEBUG = false;
 
   const onImgLoad = () => {
     setIsImgLoading(false);
@@ -15,7 +16,7 @@ function App() {
 
   return (
     <>
-      <Canvas draw={draw} />
+      <Canvas draw={draw} debug={DEBUG} />
       <button
         onClick={addLogo}
         style={{

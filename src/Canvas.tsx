@@ -1,16 +1,15 @@
 import {useEffect, useRef} from "react";
-import {Draw, Timers} from "./types";
+import {Draw} from "./types";
 
 interface Props {
   draw: Draw;
+  debug: boolean;
 }
 
 const Canvas = (props: Props) => {
-  const {draw, ...rest} = props;
+  const {draw, debug, ...rest} = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<Timers>({
-    animationFrameId: 0,
-  });
+  const requestIdRef = useRef(0);
 
   const resizeCanvas = (canvas: HTMLCanvasElement) => {
     const {width, height} = canvas.getBoundingClientRect();
@@ -26,36 +25,54 @@ const Canvas = (props: Props) => {
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    const animation = animationRef.current;
 
     resizeCanvas(canvas);
 
-    const tick = () => {
+    const step = () => {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       draw({
         ctx,
         synth: null,
         isAudioReady: false,
+        debug,
       });
 
-      animation.animationFrameId = window.requestAnimationFrame(tick);
+      if (!debug) {
+        requestIdRef.current = window.requestAnimationFrame(step);
+      }
     };
 
-    tick();
+    step();
 
     return () => {
-      window.cancelAnimationFrame(animation.animationFrameId);
+      window.cancelAnimationFrame(requestIdRef.current);
     };
-  }, [draw]);
+  }, [debug, draw]);
+
+  // For debugging purposes
+  const manualStep = () => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    draw({
+      ctx,
+      synth: null,
+      isAudioReady: false,
+      debug,
+    });
+  };
 
   return (
-    <canvas
-      ref={canvasRef}
-      {...rest}
-      style={{width: 500, height: 500, border: "1px solid black"}}
-    >
-      <p>Alt text here</p>
-    </canvas>
+    <>
+      <canvas
+        ref={canvasRef}
+        {...rest}
+        style={{width: 500, height: 500, border: "1px solid black"}}
+      >
+        <p>Alt text here</p>
+      </canvas>
+      <button onClick={manualStep}>STEP 1</button>
+    </>
   );
 };
 
