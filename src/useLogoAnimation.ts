@@ -1,6 +1,12 @@
 import {MutableRefObject, useRef} from "react";
 import {DVDLogo} from "./DVDLogo";
-import {DrawParams} from "./types";
+
+export interface DrawParams {
+  ctx: CanvasRenderingContext2D;
+  synth: any; // TODO,
+  isAudioReady: boolean;
+  DEBUG?: boolean;
+}
 
 export class Animation {
   logos: DVDLogo[];
@@ -26,15 +32,30 @@ const useLogoAnimation = (
   const draw = (params: DrawParams) => {
     if (isImgLoading) return;
 
-    const {ctx, synth, isAudioReady, debug} = params;
+    const {ctx, synth, isAudioReady, DEBUG} = params;
 
-    // Add the first circle
+    // Add the initial logo
     if (animation.frameCount === 0) {
-      spawn();
+      // const left = [animation.distancePerStep, logoRef, 200, 0, 0, 8, "TOP"];
+
+      // const right = [
+      //   animation.distancePerStep,
+      //   logoRef,
+      //   300,
+      //   400,
+      //   0,
+      //   -8,
+      //   "BOTTOM",
+      // ];
+
+      animation.logos.push(new DVDLogo(animation.distancePerStep, logoRef));
+      // // @ts-expect-error
+      // animation.logos.push(new DVDLogo(...right));
     }
 
     animation.logos.forEach((logo) => {
       logo.step(
+        animation.logos,
         animation.distancePerStep,
         animation.prevDistancePerStep,
         animation.frameCount,
@@ -44,8 +65,8 @@ const useLogoAnimation = (
       );
     });
 
-    if (debug) {
-      console.log(animation.logos[0]);
+    if (DEBUG) {
+      console.log(animation.logos);
     }
 
     animation.prevDistancePerStep = animation.distancePerStep;

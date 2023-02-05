@@ -5,6 +5,7 @@ import {useRef, useState} from "react";
 
 function App() {
   const DEBUG = false;
+  const DRAW_RECT = true;
 
   const logoRef = useRef(null);
   const [isImgLoading, setIsImgLoading] = useState(false);
@@ -21,7 +22,7 @@ function App() {
 
   return (
     <>
-      <Canvas draw={draw} debug={DEBUG} />
+      <Canvas draw={draw} params={{DEBUG, DRAW_RECT}} />
       <button onClick={addLogo}>+1</button>
       <button onClick={() => spawnN(10)}>+10</button>
       <div style={{display: "none"}}>

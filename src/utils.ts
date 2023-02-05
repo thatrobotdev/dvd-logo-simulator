@@ -16,7 +16,7 @@ export const getRandomBool = () => {
 export const getRandomVector = (totalSpeed: number) => {
   const part1 = getRandomFloat(0, totalSpeed);
   const part2 = totalSpeed - part1;
-  const deltaX = getRandomBool() ? -part1 : part1;
-  const deltaY = getRandomBool() ? -part2 : part2;
-  return {deltaX, deltaY};
+  const randDeltaX = getRandomBool() ? -part1 : part1;
+  const randDeltaY = getRandomBool() ? -part2 : part2;
+  return {randDeltaX, randDeltaY};
 };

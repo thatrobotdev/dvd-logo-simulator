@@ -1,13 +1,20 @@
 import {useEffect, useRef} from "react";
-import {Draw} from "./types";
+import {DrawParams} from "./useLogoAnimation";
 
 interface Props {
-  draw: Draw;
-  debug: boolean;
+  draw: (params: DrawParams) => void;
+  params: {
+    DEBUG: boolean;
+    DRAW_RECT: boolean;
+  };
 }
 
 const Canvas = (props: Props) => {
-  const {draw, debug, ...rest} = props;
+  const {
+    draw,
+    params: {DEBUG, DRAW_RECT},
+    ...rest
+  } = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestIdRef = useRef(0);
 
@@ -30,14 +37,16 @@ const Canvas = (props: Props) => {
 
     const step = () => {
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = DRAW_RECT ? "white" : "transparent";
       draw({
         ctx,
         synth: null,
         isAudioReady: false,
-        debug,
+        DEBUG,
       });
 
-      if (!debug) {
+      if (!DEBUG) {
         requestIdRef.current = window.requestAnimationFrame(step);
       }
     };
@@ -47,18 +56,20 @@ const Canvas = (props: Props) => {
     return () => {
       window.cancelAnimationFrame(requestIdRef.current);
     };
-  }, [debug, draw]);
+  }, [DEBUG, DRAW_RECT, draw]);
 
   // For debugging purposes
   const manualStep = () => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = DRAW_RECT ? "white" : "transparent";
     draw({
       ctx,
       synth: null,
       isAudioReady: false,
-      debug,
+      DEBUG,
     });
   };
 
@@ -71,7 +82,7 @@ const Canvas = (props: Props) => {
       >
         <p>Bouncing DVD Logo Simulator</p>
       </canvas>
-      {debug ? <button onClick={manualStep}>STEP</button> : null}
+      {DEBUG ? <button onClick={manualStep}>STEP</button> : null}
     </>
   );
 };

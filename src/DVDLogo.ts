@@ -1,5 +1,6 @@
 import {MutableRefObject} from "react";
 import {getRandomInt, getRandomVector} from "./utils";
+import {v4 as uuid} from "uuid";
 
 export class DVDLogo {
   x: number;
@@ -7,22 +8,39 @@ export class DVDLogo {
   deltaX: number;
   deltaY: number;
   logoRef: MutableRefObject<null>;
+  name?: string;
 
-  isMaxX = false;
-  isMinX = false;
-  isMaxY = false;
-  isMinY = false;
+  id = uuid();
+  canvasRightCollision = false;
+  canvasLeftCollision = false;
+  canvasBottomCollision = false;
+  canvasTopCollision = false;
+
+  objectRightCollision = false;
+  objectLeftCollision = false;
+  objectBottomCollision = false;
+  objectTopCollision = false;
+
   color = "blue";
   width = 64;
   height = 33;
 
-  constructor(distancePerStep: number, logoRef: MutableRefObject<null>) {
-    const {deltaX, deltaY} = getRandomVector(distancePerStep);
-    this.x = getRandomInt(100, 200);
-    this.y = getRandomInt(100, 200);
-    this.deltaX = deltaX;
-    this.deltaY = deltaY;
+  constructor(
+    distancePerStep: number,
+    logoRef: MutableRefObject<null>,
+    x?: number,
+    y?: number,
+    deltaX?: number,
+    deltaY?: number,
+    name?: string
+  ) {
+    const {randDeltaX, randDeltaY} = getRandomVector(distancePerStep);
+    this.x = x ?? getRandomInt(100, 200);
+    this.y = y ?? getRandomInt(100, 200);
+    this.deltaX = deltaX ?? randDeltaX;
+    this.deltaY = deltaY ?? randDeltaY;
     this.logoRef = logoRef;
+    this.name = name;
   }
 
   /* For steps other than first step, scale the delta
@@ -37,20 +55,26 @@ export class DVDLogo {
     const scaleFactor = distancePerStep / prevDistancePerStep;
 
     this.deltaX = this.deltaX * scaleFactor;
-    if (this.isMaxX) {
+    if (this.canvasRightCollision || this.objectRightCollision) {
       this.deltaX = -this.deltaX;
-      this.isMaxX = false;
-    } else if (this.isMinX) {
+      this.canvasRightCollision = false;
+      this.objectRightCollision = false;
+    }
+    if (this.canvasLeftCollision || this.objectLeftCollision) {
       this.deltaX = -this.deltaX;
-      this.isMinX = false;
+      this.canvasLeftCollision = false;
+      this.objectLeftCollision = false;
     }
     this.deltaY = this.deltaY * scaleFactor;
-    if (this.isMaxY) {
+    if (this.canvasBottomCollision || this.objectBottomCollision) {
       this.deltaY = -this.deltaY;
-      this.isMaxY = false;
-    } else if (this.isMinY) {
+      this.canvasBottomCollision = false;
+      this.objectBottomCollision = false;
+    }
+    if (this.canvasTopCollision || this.objectTopCollision) {
       this.deltaY = -this.deltaY;
-      this.isMinY = false;
+      this.canvasTopCollision = false;
+      this.objectTopCollision = false;
     }
   };
 
@@ -58,39 +82,95 @@ export class DVDLogo {
    * If so, set flags so that direction will change on the next step
    * Also, trigger sounds!
    */
-  private detectEdgeCollision = (
+  private detectCanvasCollision = (
     ctx: CanvasRenderingContext2D,
     isAudioReady: boolean,
     synth: any
   ) => {
     if (this.x + this.deltaX > ctx.canvas.width - this.width) {
-      this.isMaxX = true;
+      this.canvasRightCollision = true;
       isAudioReady && synth.triggerAttackRelease("C4", "8n");
     } else if (this.x + this.deltaX < 0) {
-      this.isMinX = true;
+      this.canvasLeftCollision = true;
       isAudioReady && synth.triggerAttackRelease("D4", "8n");
     }
     if (this.y + this.deltaY > ctx.canvas.height - this.height) {
-      this.isMaxY = true;
+      this.canvasBottomCollision = true;
       isAudioReady && synth.triggerAttackRelease("E4", "8n");
     } else if (this.y + this.deltaY < 0) {
-      this.isMinY = true;
+      this.canvasTopCollision = true;
       isAudioReady && synth.triggerAttackRelease("F4", "8n");
     }
   };
 
-  private detectObjectCollision = () => {
-    // TODO
+  private detectObjectCollision = (logos: DVDLogo[]) => {
+    const otherLogos = logos.filter((logo) => logo.id !== this.id);
+
+    // issues:
+    // the dimensions seem to be off by a few pixels
+    // they don't collide as they are spawning
+    otherLogos.forEach((other) => {
+      const thisLeftEdge = this.x;
+      const otherLeftEdge = other.x;
+      const thisRightEdge = this.x + this.width;
+      const otherRightEdge = other.x + other.width;
+      const thisTopEdge = this.y;
+      const otherTopEdge = other.y;
+      const thisBottomEdge = this.y + this.height;
+      const otherBottomEdge = other.y + other.height;
+
+      const isYIntersecting =
+        thisBottomEdge + this.deltaY >= otherTopEdge + other.deltaY &&
+        thisTopEdge + this.deltaY <= otherBottomEdge + other.deltaY;
+      const isXIntersecting =
+        thisLeftEdge + this.deltaX <= otherRightEdge + other.deltaX &&
+        thisRightEdge + this.deltaX >= otherLeftEdge + other.deltaX;
+
+      // Right edge.
+      if (
+        thisRightEdge < otherLeftEdge &&
+        thisRightEdge + this.deltaX >= otherLeftEdge + other.deltaX &&
+        isYIntersecting
+      ) {
+        this.objectRightCollision = true;
+      }
+      // Left edge
+      if (
+        thisLeftEdge > otherRightEdge &&
+        thisLeftEdge + this.deltaX <= otherRightEdge + other.deltaX &&
+        isYIntersecting
+      ) {
+        this.objectLeftCollision = true;
+      }
+
+      // Top edge
+      if (
+        thisTopEdge > otherBottomEdge &&
+        thisTopEdge + this.deltaY <= otherBottomEdge + other.deltaY &&
+        isXIntersecting
+      ) {
+        this.objectTopCollision = true;
+      }
+      // Bottom edge
+      if (
+        thisBottomEdge < otherTopEdge &&
+        thisBottomEdge + this.deltaY >= otherTopEdge + other.deltaY &&
+        isXIntersecting
+      ) {
+        this.objectTopCollision = true;
+      }
+    });
   };
 
   private paint = (ctx: CanvasRenderingContext2D) => {
     const imgNode = this.logoRef.current;
     if (imgNode) {
       ctx.drawImage(imgNode, this.x, this.y, this.width, this.height);
+      ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
   };
 
-  /* Move drawing position for next step, based on the circle's delta values.
+  /* Move drawing position for next step, based on the logo's delta values.
    * Also, force the circle not to move outside the canvas if
    * a collision has been detected. This is necessary to stop the circle
    * 'escaping' after a pause in animation, e.g when changing tabs.
@@ -98,19 +178,20 @@ export class DVDLogo {
   private moveDrawingPosition = (ctx: CanvasRenderingContext2D) => {
     this.x += this.deltaX;
     this.y += this.deltaY;
-    if (this.isMaxX) {
+    if (this.canvasRightCollision) {
       this.x = ctx.canvas.width - this.width;
-    } else if (this.isMinX) {
+    } else if (this.canvasLeftCollision) {
       this.x = 0;
     }
-    if (this.isMaxY) {
+    if (this.canvasBottomCollision) {
       this.y = ctx.canvas.height - this.height;
-    } else if (this.isMinY) {
+    } else if (this.canvasTopCollision) {
       this.y = 0;
     }
   };
 
   step = (
+    logos: DVDLogo[],
     distancePerStep: number,
     prevDistancePerStep: number,
     frameCount: number,
@@ -120,10 +201,16 @@ export class DVDLogo {
   ) => {
     if (frameCount === 0) return;
 
+    // Set where it's going to move next step
     this.setVector(distancePerStep, prevDistancePerStep);
-    this.detectEdgeCollision(ctx, isAudioReady, synth);
-    this.detectObjectCollision();
+
+    // Check if it will hit the walls next step
+    this.detectCanvasCollision(ctx, isAudioReady, synth);
     this.moveDrawingPosition(ctx);
+
+    // Check if it will hit another logo next step
+    this.detectObjectCollision(logos);
+
     this.paint(ctx);
   };
 }
