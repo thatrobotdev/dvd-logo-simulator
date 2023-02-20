@@ -15,6 +15,7 @@ const Canvas = (props: Props) => {
     params: {DEBUG, DRAW_RECT},
     ...rest
   } = props;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestIdRef = useRef(0);
 
@@ -36,14 +37,12 @@ const Canvas = (props: Props) => {
     resizeCanvas(canvas);
 
     const step = () => {
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = DRAW_RECT ? "white" : "transparent";
       draw({
         ctx,
         synth: null,
         isAudioReady: false,
         DEBUG,
+        DRAW_RECT,
       });
 
       if (!DEBUG) {
@@ -61,15 +60,14 @@ const Canvas = (props: Props) => {
   // For debugging purposes
   const manualStep = () => {
     if (!canvasRef.current) return;
-    const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = DRAW_RECT ? "white" : "transparent";
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     draw({
       ctx,
       synth: null,
       isAudioReady: false,
       DEBUG,
+      DRAW_RECT,
     });
   };
 

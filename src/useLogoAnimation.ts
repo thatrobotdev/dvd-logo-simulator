@@ -6,6 +6,7 @@ export interface DrawParams {
   synth: any; // TODO,
   isAudioReady: boolean;
   DEBUG?: boolean;
+  DRAW_RECT?: boolean;
 }
 
 export class Animation {
@@ -32,7 +33,12 @@ const useLogoAnimation = (
   const draw = (params: DrawParams) => {
     if (isImgLoading) return;
 
-    const {ctx, synth, isAudioReady, DEBUG} = params;
+    const {ctx, synth, isAudioReady, DEBUG, DRAW_RECT} = params;
+
+    // Setup
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = DRAW_RECT ? "white" : "transparent";
 
     // Add the initial logo
     if (animation.frameCount === 0) {
