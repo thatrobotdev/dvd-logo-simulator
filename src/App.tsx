@@ -1,12 +1,16 @@
 import Canvas from "./Canvas";
 import useLogoAnimation from "./useLogoAnimation";
 import DVDlogo from "./DVDLogo.png";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Sampler} from "tone";
 import click from "./click.wav";
 import click2 from "./click2.wav";
+import * as Tone from "tone";
+import IconButton from "@mui/material/IconButton";
+import VolumeOff from "@mui/icons-material/VolumeOff";
+import VolumeUp from "@mui/icons-material/VolumeUp";
 
-function App() {
+const App = () => {
   const DEBUG = false;
   const DRAW_RECT = true;
 
@@ -24,9 +28,18 @@ function App() {
 
   const [isImgLoading, setIsImgLoading] = useState(true);
   const [isSoundLoading, setIsSoundLoading] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
 
   const onImgLoad = () => {
     setIsImgLoading(false);
+  };
+
+  const handleMuteButtonClick = async () => {
+    if (isSoundLoading) {
+      await Tone.start();
+      setIsSoundLoading(false);
+    }
+    setIsMuted((prevState) => !prevState);
   };
 
   const {addLogo, draw} = useLogoAnimation({
@@ -38,6 +51,10 @@ function App() {
     new Array(n).fill(null).forEach(() => addLogo());
   };
 
+  useEffect(() => {
+    isMuted ? (Tone.Destination.mute = true) : (Tone.Destination.mute = false);
+  }, [isMuted]);
+
   return (
     <>
       <Canvas
@@ -45,6 +62,12 @@ function App() {
         params={{DEBUG, DRAW_RECT}}
         sampler={samplerRef.current}
       />
+      <IconButton
+        onClick={handleMuteButtonClick}
+        aria-label={isMuted ? "Unmute" : "Mute"}
+      >
+        {isMuted ? <VolumeOff /> : <VolumeUp />}
+      </IconButton>
       <button onClick={addLogo}>+1</button>
       <button onClick={() => spawnN(10)}>+10</button>
       <div style={{display: "none"}}>
@@ -61,6 +84,6 @@ function App() {
       </div>
     </>
   );
-}
+};
 
 export default App;
