@@ -1,8 +1,10 @@
 import {useEffect, useRef} from "react";
+import { Sampler } from "tone";
 import {DrawParams} from "./useLogoAnimation";
 
 interface Props {
   draw: (params: DrawParams) => void;
+  sampler: Sampler;
   params: {
     DEBUG: boolean;
     DRAW_RECT: boolean;
@@ -12,6 +14,7 @@ interface Props {
 const Canvas = (props: Props) => {
   const {
     draw,
+    sampler,
     params: {DEBUG, DRAW_RECT},
     ...rest
   } = props;
@@ -39,8 +42,7 @@ const Canvas = (props: Props) => {
     const step = () => {
       draw({
         ctx,
-        synth: null,
-        isAudioReady: false,
+        sampler,
         DEBUG,
         DRAW_RECT,
       });
@@ -55,7 +57,7 @@ const Canvas = (props: Props) => {
     return () => {
       window.cancelAnimationFrame(requestIdRef.current);
     };
-  }, [DEBUG, DRAW_RECT, draw]);
+  }, [DEBUG, DRAW_RECT, draw, sampler]);
 
   // For debugging purposes
   const manualStep = () => {
@@ -64,8 +66,7 @@ const Canvas = (props: Props) => {
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     draw({
       ctx,
-      synth: null,
-      isAudioReady: false,
+      sampler,
       DEBUG,
       DRAW_RECT,
     });

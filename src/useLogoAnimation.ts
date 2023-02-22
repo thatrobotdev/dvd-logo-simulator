@@ -1,10 +1,10 @@
 import {MutableRefObject, useRef} from "react";
+import {Sampler} from "tone";
 import {DVDLogo} from "./DVDLogo";
 
 export interface DrawParams {
   ctx: CanvasRenderingContext2D;
-  synth: any; // TODO,
-  isAudioReady: boolean;
+  sampler: Sampler;
   DEBUG?: boolean;
   DRAW_RECT?: boolean;
 }
@@ -20,10 +20,14 @@ export class Animation {
   }
 }
 
-const useLogoAnimation = (
-  logoRef: MutableRefObject<null>,
-  isImgLoading: boolean
-) => {
+interface params {
+  logoRef: MutableRefObject<null>;
+  isLoading: boolean;
+}
+
+const useLogoAnimation = (params: params) => {
+  const {logoRef, isLoading} = params;
+
   const animation = useRef(new Animation()).current;
 
   const spawn = () => {
@@ -31,9 +35,9 @@ const useLogoAnimation = (
   };
 
   const draw = (params: DrawParams) => {
-    if (isImgLoading) return;
+    if (isLoading) return;
 
-    const {ctx, synth, isAudioReady, DEBUG, DRAW_RECT} = params;
+    const {ctx, sampler, DEBUG, DRAW_RECT} = params;
 
     // Setup
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -42,21 +46,7 @@ const useLogoAnimation = (
 
     // Add the initial logo
     if (animation.frameCount === 0) {
-      // const left = [animation.distancePerStep, logoRef, 200, 0, 0, 8, "TOP"];
-
-      // const right = [
-      //   animation.distancePerStep,
-      //   logoRef,
-      //   300,
-      //   400,
-      //   0,
-      //   -8,
-      //   "BOTTOM",
-      // ];
-
       animation.logos.push(new DVDLogo(animation.distancePerStep, logoRef));
-      // // @ts-expect-error
-      // animation.logos.push(new DVDLogo(...right));
     }
 
     animation.logos.forEach((logo) => {
@@ -66,8 +56,7 @@ const useLogoAnimation = (
         animation.prevDistancePerStep,
         animation.frameCount,
         ctx,
-        isAudioReady,
-        synth
+        sampler
       );
     });
 

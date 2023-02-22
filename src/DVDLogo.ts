@@ -1,6 +1,7 @@
 import {MutableRefObject} from "react";
 import {getRandomInt, getRandomVector} from "./utils";
 import {v4 as uuid} from "uuid";
+import {Sampler} from "tone";
 
 export class DVDLogo {
   x: number;
@@ -84,31 +85,27 @@ export class DVDLogo {
    */
   private detectCanvasCollision = (
     ctx: CanvasRenderingContext2D,
-    isAudioReady: boolean,
-    synth: any
+    sampler: Sampler
   ) => {
     if (this.x + this.deltaX > ctx.canvas.width - this.width) {
       this.canvasRightCollision = true;
-      isAudioReady && synth.triggerAttackRelease("C4", "8n");
+      sampler.triggerAttack("C4");
     } else if (this.x + this.deltaX < 0) {
       this.canvasLeftCollision = true;
-      isAudioReady && synth.triggerAttackRelease("D4", "8n");
+      sampler.triggerAttack("C4");
     }
     if (this.y + this.deltaY > ctx.canvas.height - this.height) {
       this.canvasBottomCollision = true;
-      isAudioReady && synth.triggerAttackRelease("E4", "8n");
+      sampler.triggerAttack("C4");
     } else if (this.y + this.deltaY < 0) {
       this.canvasTopCollision = true;
-      isAudioReady && synth.triggerAttackRelease("F4", "8n");
+      sampler.triggerAttack("C4");
     }
   };
 
-  private detectObjectCollision = (logos: DVDLogo[]) => {
+  private detectObjectCollision = (logos: DVDLogo[], sampler: Sampler) => {
     const otherLogos = logos.filter((logo) => logo.id !== this.id);
 
-    // issues:
-    // the dimensions seem to be off by a few pixels
-    // they don't collide as they are spawning
     otherLogos.forEach((other) => {
       const thisLeftEdge = this.x;
       const otherLeftEdge = other.x;
@@ -126,38 +123,41 @@ export class DVDLogo {
         thisLeftEdge + this.deltaX <= otherRightEdge + other.deltaX &&
         thisRightEdge + this.deltaX >= otherLeftEdge + other.deltaX;
 
-      // Right edge.
+      // Logo right edge
       if (
         thisRightEdge < otherLeftEdge &&
         thisRightEdge + this.deltaX >= otherLeftEdge + other.deltaX &&
         isYIntersecting
       ) {
         this.objectRightCollision = true;
+        sampler.triggerAttack("D4");
       }
-      // Left edge
+      // Logo left edge
       if (
         thisLeftEdge > otherRightEdge &&
         thisLeftEdge + this.deltaX <= otherRightEdge + other.deltaX &&
         isYIntersecting
       ) {
         this.objectLeftCollision = true;
+        sampler.triggerAttack("D4");
       }
-
-      // Top edge
+      // Logo top edge
       if (
         thisTopEdge > otherBottomEdge &&
         thisTopEdge + this.deltaY <= otherBottomEdge + other.deltaY &&
         isXIntersecting
       ) {
         this.objectTopCollision = true;
+        sampler.triggerAttack("D4");
       }
-      // Bottom edge
+      // Logo bottom edge
       if (
         thisBottomEdge < otherTopEdge &&
         thisBottomEdge + this.deltaY >= otherTopEdge + other.deltaY &&
         isXIntersecting
       ) {
         this.objectTopCollision = true;
+        sampler.triggerAttack("D4");
       }
     });
   };
@@ -196,8 +196,7 @@ export class DVDLogo {
     prevDistancePerStep: number,
     frameCount: number,
     ctx: CanvasRenderingContext2D,
-    isAudioReady: boolean,
-    synth: any
+    sampler: Sampler
   ) => {
     if (frameCount === 0) return;
 
@@ -205,11 +204,11 @@ export class DVDLogo {
     this.setVector(distancePerStep, prevDistancePerStep);
 
     // Check if it will hit the walls next step
-    this.detectCanvasCollision(ctx, isAudioReady, synth);
+    this.detectCanvasCollision(ctx, sampler);
     this.moveDrawingPosition(ctx);
 
     // Check if it will hit another logo next step
-    this.detectObjectCollision(logos);
+    this.detectObjectCollision(logos, sampler);
 
     this.paint(ctx);
   };
