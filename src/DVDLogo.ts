@@ -171,7 +171,7 @@ export class DVDLogo {
   };
 
   /* Move drawing position for next step, based on the logo's delta values.
-   * Also, force the circle not to move outside the canvas if
+   * Also, force the logo not to move outside the canvas if
    * a collision has been detected. This is necessary to stop the circle
    * 'escaping' after a pause in animation, e.g when changing tabs.
    */
@@ -196,7 +196,8 @@ export class DVDLogo {
     prevDistancePerStep: number,
     frameCount: number,
     ctx: CanvasRenderingContext2D,
-    sampler: Sampler
+    sampler: Sampler,
+    isDetectCollisions: Boolean
   ) => {
     if (frameCount === 0) return;
 
@@ -208,7 +209,7 @@ export class DVDLogo {
     this.moveDrawingPosition(ctx);
 
     // Check if it will hit another logo next step
-    this.detectObjectCollision(logos, sampler);
+    isDetectCollisions && this.detectObjectCollision(logos, sampler);
 
     this.paint(ctx);
   };

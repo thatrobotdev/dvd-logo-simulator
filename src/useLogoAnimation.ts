@@ -23,10 +23,11 @@ export class Animation {
 interface params {
   logoRef: MutableRefObject<null>;
   isLoading: boolean;
+  isDetectCollisions: boolean;
 }
 
 const useLogoAnimation = (params: params) => {
-  const {logoRef, isLoading} = params;
+  const {logoRef, isLoading, isDetectCollisions} = params;
 
   const animation = useRef(new Animation()).current;
 
@@ -56,7 +57,8 @@ const useLogoAnimation = (params: params) => {
         animation.prevDistancePerStep,
         animation.frameCount,
         ctx,
-        sampler
+        sampler,
+        isDetectCollisions
       );
     });
 
