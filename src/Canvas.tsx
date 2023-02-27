@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import { Sampler } from "tone";
+import {Sampler} from "tone";
 import {DrawParams} from "./useLogoAnimation";
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
   params: {
     DEBUG: boolean;
     DRAW_RECT: boolean;
+    canvasWidth: string;
+    canvasHeight: string;
   };
 }
 
@@ -15,8 +17,7 @@ const Canvas = (props: Props) => {
   const {
     draw,
     sampler,
-    params: {DEBUG, DRAW_RECT},
-    ...rest
+    params: {DEBUG, DRAW_RECT, canvasHeight, canvasWidth},
   } = props;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -76,8 +77,7 @@ const Canvas = (props: Props) => {
     <>
       <canvas
         ref={canvasRef}
-        {...rest}
-        style={{width: 500, height: 500, border: "1px solid black"}}
+        style={{width: canvasWidth, height: canvasHeight}}
       >
         <p>Bouncing DVD Logo Simulator</p>
       </canvas>

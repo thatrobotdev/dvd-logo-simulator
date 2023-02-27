@@ -9,7 +9,34 @@ import * as Tone from "tone";
 import IconButton from "@mui/material/IconButton";
 import VolumeOff from "@mui/icons-material/VolumeOff";
 import VolumeUp from "@mui/icons-material/VolumeUp";
-import {Checkbox, FormControlLabel} from "@mui/material";
+import {Button, FormControlLabel, Switch} from "@mui/material";
+import styled from "styled-components";
+
+const CANVAS_WIDTH = "500px";
+const CANVAS_HEIGHT = "500px";
+
+const CanvasContainer = styled.div`
+  height: ${CANVAS_HEIGHT};
+  width: ${CANVAS_WIDTH};
+  position: relative;
+  margin-bottom: 1rem;
+  margin-left: 1rem;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-left: 1rem;
+`;
+
+const MuteButton = styled(IconButton)`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: white;
+`;
 
 const App = () => {
   const DEBUG = false;
@@ -62,25 +89,41 @@ const App = () => {
 
   return (
     <>
-      <Canvas
-        draw={draw}
-        params={{DEBUG, DRAW_RECT}}
-        sampler={samplerRef.current}
-      />
-      <IconButton onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
-        {isMuted ? <VolumeOff /> : <VolumeUp />}
-      </IconButton>
-      <button onClick={addLogo}>+1</button>
-      <button onClick={() => spawnN(10)}>+10</button>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={isDetectCollisions}
-            onChange={toggleDetectCollisions}
-          />
-        }
-        label="Detect collisions (experimental)"
-      />
+      <CanvasContainer>
+        <Canvas
+          draw={draw}
+          params={{
+            DEBUG,
+            DRAW_RECT,
+            canvasWidth: CANVAS_WIDTH,
+            canvasHeight: CANVAS_HEIGHT,
+          }}
+          sampler={samplerRef.current}
+        />
+        <MuteButton
+          onClick={toggleMute}
+          aria-label={isMuted ? "Unmute" : "Mute"}
+        >
+          {isMuted ? <VolumeOff /> : <VolumeUp />}
+        </MuteButton>
+      </CanvasContainer>
+      <Buttons>
+        <Button onClick={addLogo} variant="contained">
+          Add logo
+        </Button>
+        <Button onClick={() => spawnN(10)} variant="contained">
+          Add 10 logos
+        </Button>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isDetectCollisions}
+              onChange={toggleDetectCollisions}
+            />
+          }
+          label="Detect collisions (experimental)"
+        />
+      </Buttons>
       <div style={{display: "none"}}>
         {/* Alt not needed, img is just a source for the canvas */}
         {/* eslint-disable-next-line jsx-a11y/alt-text */}
