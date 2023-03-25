@@ -26,6 +26,7 @@ const App = () => {
   const DRAW_RECT = false;
 
   const [isDetectCollisions, setIsDetectCollisions] = useState(false);
+  const [speed, setSpeed] = useState(10);
 
   const {samplerRef, isSoundLoading, isMuted, toggleMute} = useSampler();
 
@@ -35,9 +36,12 @@ const App = () => {
     logoRef,
     isLoading: isImgLoading || isSoundLoading,
     isDetectCollisions,
+    distancePerStep: speed / 10,
   });
 
   const toggleDetectCollisions = () => setIsDetectCollisions((prev) => !prev);
+
+  const handleSpeedChange = (event: Event, value: number) => setSpeed(value);
 
   const searchParams = new URLSearchParams(
     window.location.search.replace("?", "")
@@ -67,6 +71,8 @@ const App = () => {
         spawnN={spawnN}
         isDetectCollisions={isDetectCollisions}
         toggleDetectCollisions={toggleDetectCollisions}
+        speed={speed}
+        handleSpeedChange={handleSpeedChange}
       />
       {!isIframe ? <Author /> : null}
       <SourceImage logoRef={logoRef} onImgLoad={onImgLoad} />

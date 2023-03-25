@@ -47,7 +47,7 @@ export class DVDLogo {
   }
 
   /* For steps other than first step, scale the delta
-   * values based on any change in circle speed.
+   * values based on any change in logo speed.
    * Flip the sign to change direction if a collision was
    * detected on the previous step.
    */
@@ -87,7 +87,7 @@ export class DVDLogo {
     this.colorIndex = possibleColors[getRandomInt(0, possibleColors.length)];
   };
 
-  /* Check if velocity values on this step would cause circle to exit canvas on next step.
+  /* Check if velocity values on this step would cause logo to exit canvas on next step.
    * If so, set flags so that direction will change on the next step
    * Also, trigger sounds!
    */
@@ -184,7 +184,7 @@ export class DVDLogo {
 
   /* Move drawing position for next step, based on the logo's delta values.
    * Also, force the logo not to move outside the canvas if
-   * a collision has been detected. This is necessary to stop the circle
+   * a collision has been detected. This is necessary to stop the logo
    * 'escaping' after a pause in animation, e.g when changing tabs.
    */
   private moveDrawingPosition = (ctx: CanvasRenderingContext2D) => {

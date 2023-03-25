@@ -11,8 +11,8 @@ export interface DrawParams {
 
 export class Animation {
   logos: DVDLogo[];
-  distancePerStep = 5;
-  prevDistancePerStep = 5;
+  distancePerStep = 1;
+  prevDistancePerStep = 1;
   frameCount = 0;
 
   constructor() {
@@ -24,12 +24,15 @@ interface params {
   logoRef: MutableRefObject<any[]>;
   isLoading: boolean;
   isDetectCollisions: boolean;
+  distancePerStep: number;
 }
 
 const useLogoAnimation = (params: params) => {
-  const {logoRef, isLoading, isDetectCollisions} = params;
+  const {logoRef, isLoading, isDetectCollisions, distancePerStep} = params;
 
   const animation = useRef(new Animation()).current;
+
+  animation.distancePerStep = distancePerStep;
 
   const spawn = () => {
     animation.logos.push(new DVDLogo(animation.distancePerStep, logoRef));
