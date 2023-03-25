@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {MutableRefObject, useEffect, useState} from "react";
 import logo1 from "../img/dvdlogo-01.png";
 import logo2 from "../img/dvdlogo-02.png";
@@ -11,7 +9,7 @@ import logo7 from "../img/dvdlogo-07.png";
 import logo8 from "../img/dvdlogo-08.png";
 
 interface Props {
-  logoRef: MutableRefObject<null>;
+  logoRef: MutableRefObject<any[]>;
   onImgLoad: () => void;
 }
 
@@ -21,7 +19,7 @@ const SourceImage = ({logoRef, onImgLoad}: Props) => {
     new Array(8).fill(true)
   );
 
-  const handleLoad = (i) => {
+  const handleLoad = (i: number) => {
     setImgLoadingStates((prevState) => {
       const newState = [...prevState];
       newState[i] = false;
@@ -34,8 +32,6 @@ const SourceImage = ({logoRef, onImgLoad}: Props) => {
       onImgLoad();
     }
   }, [imgLoadingStates, onImgLoad]);
-
-  if (!logoRef.current) return null;
 
   return (
     <div style={{display: "none"}}>

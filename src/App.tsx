@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {useState} from "react";
 import styled from "styled-components";
 import Canvas from "./classes/Canvas";

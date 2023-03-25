@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {MutableRefObject} from "react";
 import {getRandomInt, getRandomVector} from "../utils/utils";
 import {v4 as uuid} from "uuid";
@@ -10,7 +8,7 @@ export class DVDLogo {
   y: number;
   deltaX: number;
   deltaY: number;
-  logoRef: MutableRefObject<null>;
+  logoRef: MutableRefObject<any[]>;
   name?: string;
 
   id = uuid();
@@ -30,7 +28,7 @@ export class DVDLogo {
 
   constructor(
     distancePerStep: number,
-    logoRef: MutableRefObject<null>,
+    logoRef: MutableRefObject<any[]>,
     x?: number,
     y?: number,
     deltaX?: number,

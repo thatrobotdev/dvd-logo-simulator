@@ -21,7 +21,7 @@ export class Animation {
 }
 
 interface params {
-  logoRef: MutableRefObject<null>;
+  logoRef: MutableRefObject<any[]>;
   isLoading: boolean;
   isDetectCollisions: boolean;
 }
