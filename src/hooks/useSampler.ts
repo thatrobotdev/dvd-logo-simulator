@@ -22,6 +22,7 @@ const useSampler = () => {
   const mute = () => {
     setIsMuted(true);
     Tone.Destination.mute = true;
+    Tone.context.resume();
   };
 
   const unmute = async () => {
@@ -31,6 +32,7 @@ const useSampler = () => {
     }
     setIsMuted(false);
     Tone.Destination.mute = false;
+    Tone.context.resume();
   };
 
   const toggleMute = () => (isMuted ? unmute() : mute());
