@@ -7,6 +7,7 @@ const ControlsContainer = styled.div`
   align-items: flex-start;
   gap: 1rem;
   margin-top: 1rem;
+  margin-left: 0.2rem;
   width: 50%;
 `;
 
