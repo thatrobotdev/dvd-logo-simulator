@@ -10,6 +10,12 @@ const ButtonElement = styled(IconButton)`
   color: white;
 `;
 
+const P = styled.p`
+  position: absolute;
+  right: 0.5rem;
+  bottom: -2rem;
+`;
+
 interface Props {
   toggleMute: () => void;
   isMuted: boolean;
@@ -17,12 +23,15 @@ interface Props {
 
 const MuteButton = ({toggleMute, isMuted}: Props) => {
   return (
-    <ButtonElement
-      onClick={toggleMute}
-      aria-label={isMuted ? "Unmute" : "Mute"}
-    >
-      {isMuted ? <VolumeOff /> : <VolumeUp />}
-    </ButtonElement>
+    <>
+      <ButtonElement
+        onClick={toggleMute}
+        aria-label={isMuted ? "Unmute" : "Mute"}
+      >
+        {isMuted ? <VolumeOff /> : <VolumeUp />}
+      </ButtonElement>
+      <P>Click for sound ⬆️</P>
+    </>
   );
 };
 

@@ -64,7 +64,6 @@ const App = () => {
         isDetectCollisions={isDetectCollisions}
         toggleDetectCollisions={toggleDetectCollisions}
       />
-
       {!isIframe ? <Author /> : null}
       <SourceImage logoRef={logoRef} onImgLoad={onImgLoad} />
     </AppContainer>
