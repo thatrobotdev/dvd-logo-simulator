@@ -1,4 +1,6 @@
-import {useRef, useState} from "react";
+// @ts-nocheck
+
+import {useState} from "react";
 import styled from "styled-components";
 import Canvas from "./classes/Canvas";
 import Author from "./components/Author";

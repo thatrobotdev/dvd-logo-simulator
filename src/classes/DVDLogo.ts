@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {MutableRefObject} from "react";
 import {getRandomInt, getRandomVector} from "../utils/utils";
 import {v4 as uuid} from "uuid";
@@ -163,7 +165,7 @@ export class DVDLogo {
   };
 
   private paint = (ctx: CanvasRenderingContext2D) => {
-    const imgNode = this.logoRef.current;
+    const imgNode = this.logoRef.current[0];
     if (imgNode) {
       ctx.drawImage(imgNode, this.x, this.y, this.width, this.height);
       ctx.strokeRect(this.x, this.y, this.width, this.height);

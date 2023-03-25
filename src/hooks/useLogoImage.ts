@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 
 const useLogoImage = () => {
-  const logoRef = useRef(null);
+  const logoRef = useRef(new Array(8));
   const [isImgLoading, setIsImgLoading] = useState(true);
 
   const onImgLoad = () => {
