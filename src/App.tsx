@@ -11,19 +11,16 @@ import VolumeOff from "@mui/icons-material/VolumeOff";
 import VolumeUp from "@mui/icons-material/VolumeUp";
 import {Button, FormControlLabel, Switch} from "@mui/material";
 import styled from "styled-components";
-
-const CANVAS_WIDTH = "500px";
-const CANVAS_HEIGHT = "500px";
-
-interface CanvasContainerProps {
+interface AppContainerProps {
   isIframe: boolean;
 }
 
-const CanvasContainer = styled.div<CanvasContainerProps>`
-  height: ${CANVAS_HEIGHT};
-  width: ${CANVAS_WIDTH};
-  position: relative;
+const AppContainer = styled.div<AppContainerProps>`
   margin: ${({isIframe}) => (isIframe ? "0 0 1rem 0" : "1rem")};
+`;
+
+const CanvasContainer = styled.div`
+  position: relative;
 `;
 
 const Buttons = styled.div`
@@ -31,7 +28,7 @@ const Buttons = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  margin-left: 1rem;
+  margin-top: 1rem;
 `;
 
 const MuteButton = styled(IconButton)`
@@ -101,15 +98,15 @@ const App = () => {
   const isIframe = searchParams.get("iframe") === "true";
 
   return (
-    <>
-      <CanvasContainer isIframe={isIframe}>
+    <AppContainer isIframe={isIframe}>
+      <CanvasContainer>
         <Canvas
           draw={draw}
           params={{
             DEBUG,
             DRAW_RECT,
-            canvasWidth: CANVAS_WIDTH,
-            canvasHeight: CANVAS_HEIGHT,
+            canvasWidth: "100%",
+            canvasHeight: "500px",
           }}
           sampler={samplerRef.current}
         />
@@ -149,7 +146,7 @@ const App = () => {
           onLoad={onImgLoad}
         />
       </div>
-    </>
+    </AppContainer>
   );
 };
 
