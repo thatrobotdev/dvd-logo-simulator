@@ -1,4 +1,4 @@
-import { Skeleton} from "@mui/material";
+import {Skeleton} from "@mui/material";
 import {useState} from "react";
 import styled from "styled-components";
 import Canvas from "./classes/Canvas";
@@ -27,7 +27,7 @@ const App = () => {
   const DRAW_RECT = false;
 
   const [isDetectCollisions, setIsDetectCollisions] = useState(false);
-  const [speed, setSpeed] = useState(10);
+  const [speed, setSpeed] = useState(20);
 
   const {samplerRef, isSoundLoading, isMuted, toggleMute} = useSampler();
 
@@ -43,8 +43,6 @@ const App = () => {
   });
 
   const toggleDetectCollisions = () => setIsDetectCollisions((prev) => !prev);
-
-  const handleSpeedChange = (event: Event, value: number) => setSpeed(value);
 
   const searchParams = new URLSearchParams(
     window.location.search.replace("?", "")
@@ -77,8 +75,7 @@ const App = () => {
         spawnN={spawnN}
         isDetectCollisions={isDetectCollisions}
         toggleDetectCollisions={toggleDetectCollisions}
-        speed={speed}
-        handleSpeedChange={handleSpeedChange}
+        setSpeed={setSpeed}
       />
       {!isIframe ? <Author /> : null}
       <SourceImage logoRef={logoRef} onImgLoad={onImgLoad} />

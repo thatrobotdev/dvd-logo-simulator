@@ -1,4 +1,5 @@
 import {Button, FormControlLabel, Slider, Switch} from "@mui/material";
+import {useState} from "react";
 import styled from "styled-components";
 
 const ControlsContainer = styled.div`
@@ -6,44 +7,52 @@ const ControlsContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 3.5rem;
   margin-left: 0.2rem;
-  width: 50%;
+  width: 100%;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  gap: 1rem;
 `;
 
 interface Props {
   spawnN: (n: number) => void;
   isDetectCollisions: boolean;
   toggleDetectCollisions: () => void;
-  speed: number;
-  handleSpeedChange: (event: Event, value: number) => void;
+  setSpeed: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Controls = ({
   spawnN,
   isDetectCollisions,
   toggleDetectCollisions,
-  speed,
-  handleSpeedChange,
+  setSpeed,
 }: Props) => {
+  const [sliderValue, setSliderValue] = useState(20);
+
   return (
     <ControlsContainer>
       <Slider
         aria-label="Speed"
-        value={speed}
-        // TODO
+        value={sliderValue}
         // @ts-expect-error
-        onChange={handleSpeedChange}
+        onChange={(e, value) => setSliderValue(value)}
+        // @ts-expect-error
+        onChangeCommitted={(e, value) => setSpeed(value)}
         min={1}
         max={100}
-        defaultValue={1}
+        defaultValue={20}
       />
-      <Button onClick={() => spawnN(1)} variant="contained">
-        Add logo
-      </Button>
-      <Button onClick={() => spawnN(5)} variant="contained">
-        Add 5 logos
-      </Button>
+      <Buttons>
+        <Button onClick={() => spawnN(1)} variant="contained">
+          Add logo
+        </Button>
+        <Button onClick={() => spawnN(5)} variant="contained">
+          Add 5 logos
+        </Button>
+      </Buttons>
       <FormControlLabel
         control={
           <Switch
