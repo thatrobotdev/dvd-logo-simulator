@@ -19,8 +19,7 @@ const CanvasContainer = styled.div`
   height: ${CANVAS_HEIGHT};
   width: ${CANVAS_WIDTH};
   position: relative;
-  margin-bottom: 1rem;
-  margin-left: 1rem;
+  margin: 1rem;
 `;
 
 const Buttons = styled.div`
@@ -121,7 +120,7 @@ const App = () => {
               onChange={toggleDetectCollisions}
             />
           }
-          label="Detect collisions (experimental)"
+          label="Detect collisions between logos (experimental)"
         />
       </Buttons>
       <div style={{display: "none"}}>
