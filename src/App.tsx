@@ -1,15 +1,13 @@
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import styled from "styled-components";
-import * as Tone from "tone";
-import {Sampler} from "tone";
-import Canvas from "./Canvas";
-import click from "./click.wav";
-import click2 from "./click2.wav";
+import Canvas from "./classes/Canvas";
 import Author from "./components/Author";
 import Controls from "./components/Controls";
 import MuteButton from "./components/MuteButton";
 import SourceImage from "./components/SourceImage";
-import useLogoAnimation from "./useLogoAnimation";
+import useLogoAnimation from "./hooks/useLogoAnimation";
+import useLogoImage from "./hooks/useLogoImage";
+import useSampler from "./hooks/useSampler";
 
 interface AppContainerProps {
   isIframe: boolean;
@@ -27,55 +25,19 @@ const App = () => {
   const DEBUG = false;
   const DRAW_RECT = false;
 
-  // States
-  const [isImgLoading, setIsImgLoading] = useState(true);
-  const [isSoundLoading, setIsSoundLoading] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
   const [isDetectCollisions, setIsDetectCollisions] = useState(false);
 
-  // Refs
-  const logoRef = useRef(null);
-  const samplerRef = useRef(
-    new Sampler(
-      {C4: click2, D4: click},
-      {
-        onload: () => {
-          setIsSoundLoading(false);
-        },
-      }
-    ).toDestination()
-  );
+  const {samplerRef, isSoundLoading, isMuted, toggleMute} = useSampler();
 
-  // Hooks
-  const {addLogo, draw} = useLogoAnimation({
+  const {logoRef, isImgLoading, onImgLoad} = useLogoImage();
+
+  const {draw, spawnN} = useLogoAnimation({
     logoRef,
     isLoading: isImgLoading || isSoundLoading,
     isDetectCollisions,
   });
 
-  // Handlers
-  const onImgLoad = () => {
-    setIsImgLoading(false);
-  };
-
-  const toggleMute = async () => {
-    if (isSoundLoading) {
-      await Tone.start();
-      setIsSoundLoading(false);
-    }
-    setIsMuted((prevState) => !prevState);
-  };
-
   const toggleDetectCollisions = () => setIsDetectCollisions((prev) => !prev);
-
-  const spawnN = (n: number) => {
-    new Array(n).fill(null).forEach(() => addLogo());
-  };
-
-  // Side-effects
-  useEffect(() => {
-    isMuted ? (Tone.Destination.mute = true) : (Tone.Destination.mute = false);
-  }, [isMuted]);
 
   const searchParams = new URLSearchParams(
     window.location.search.replace("?", "")
@@ -98,7 +60,6 @@ const App = () => {
         <MuteButton toggleMute={toggleMute} isMuted={isMuted} />
       </CanvasContainer>
       <Controls
-        addLogo={addLogo}
         spawnN={spawnN}
         isDetectCollisions={isDetectCollisions}
         toggleDetectCollisions={toggleDetectCollisions}

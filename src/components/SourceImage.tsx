@@ -1,5 +1,5 @@
 import {MutableRefObject} from "react";
-import DVDlogo from "./DVDLogo.png";
+import DVDlogo from "../img/DVDLogo.png";
 
 interface Props {
   logoRef: MutableRefObject<null>;

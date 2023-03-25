@@ -1,5 +1,5 @@
 import {MutableRefObject} from "react";
-import {getRandomInt, getRandomVector} from "./utils";
+import {getRandomInt, getRandomVector} from "../utils/utils";
 import {v4 as uuid} from "uuid";
 import {Sampler} from "tone";
 

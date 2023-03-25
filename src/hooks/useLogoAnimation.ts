@@ -1,6 +1,6 @@
 import {MutableRefObject, useRef} from "react";
 import {Sampler} from "tone";
-import {DVDLogo} from "./DVDLogo";
+import {DVDLogo} from "../classes/DVDLogo";
 
 export interface DrawParams {
   ctx: CanvasRenderingContext2D;
@@ -33,6 +33,10 @@ const useLogoAnimation = (params: params) => {
 
   const spawn = () => {
     animation.logos.push(new DVDLogo(animation.distancePerStep, logoRef));
+  };
+
+  const spawnN = (n: number) => {
+    new Array(n).fill(null).forEach(() => spawn());
   };
 
   const draw = (params: DrawParams) => {
@@ -71,7 +75,7 @@ const useLogoAnimation = (params: params) => {
     animation.frameCount++;
   };
 
-  return {addLogo: spawn, draw};
+  return {spawnN, draw};
 };
 
 export default useLogoAnimation;

@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Switch } from "@mui/material";
+import {Button, FormControlLabel, Switch} from "@mui/material";
 import styled from "styled-components";
 
 const ControlsContainer = styled.div`
@@ -10,21 +10,19 @@ const ControlsContainer = styled.div`
 `;
 
 interface Props {
-  addLogo: () => void;
   spawnN: (n: number) => void;
   isDetectCollisions: boolean;
   toggleDetectCollisions: () => void;
 }
 
 const Controls = ({
-  addLogo,
   spawnN,
   isDetectCollisions,
   toggleDetectCollisions,
 }: Props) => {
   return (
     <ControlsContainer>
-      <Button onClick={addLogo} variant="contained">
+      <Button onClick={() => spawnN(1)} variant="contained">
         Add logo
       </Button>
       <Button onClick={() => spawnN(5)} variant="contained">

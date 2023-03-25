@@ -1,6 +1,6 @@
 import {useEffect, useRef} from "react";
 import {Sampler} from "tone";
-import {DrawParams} from "./useLogoAnimation";
+import {DrawParams} from "../hooks/useLogoAnimation";
 
 interface Props {
   draw: (params: DrawParams) => void;
