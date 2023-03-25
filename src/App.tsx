@@ -15,11 +15,15 @@ import styled from "styled-components";
 const CANVAS_WIDTH = "500px";
 const CANVAS_HEIGHT = "500px";
 
-const CanvasContainer = styled.div`
+interface CanvasContainerProps {
+  isIframe: boolean;
+}
+
+const CanvasContainer = styled.div<CanvasContainerProps>`
   height: ${CANVAS_HEIGHT};
   width: ${CANVAS_WIDTH};
   position: relative;
-  margin: 1rem;
+  margin: ${({isIframe}) => (isIframe ? "0 0 1rem 0" : "1rem")};
 `;
 
 const Buttons = styled.div`
@@ -41,6 +45,13 @@ const App = () => {
   const DEBUG = false;
   const DRAW_RECT = false;
 
+  // States
+  const [isImgLoading, setIsImgLoading] = useState(true);
+  const [isSoundLoading, setIsSoundLoading] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isDetectCollisions, setIsDetectCollisions] = useState(false);
+
+  // Refs
   const logoRef = useRef(null);
   const samplerRef = useRef(
     new Sampler(
@@ -53,11 +64,14 @@ const App = () => {
     ).toDestination()
   );
 
-  const [isImgLoading, setIsImgLoading] = useState(true);
-  const [isSoundLoading, setIsSoundLoading] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isDetectCollisions, setIsDetectCollisions] = useState(false);
+  // Hooks
+  const {addLogo, draw} = useLogoAnimation({
+    logoRef,
+    isLoading: isImgLoading || isSoundLoading,
+    isDetectCollisions,
+  });
 
+  // Handlers
   const onImgLoad = () => {
     setIsImgLoading(false);
   };
@@ -72,23 +86,23 @@ const App = () => {
 
   const toggleDetectCollisions = () => setIsDetectCollisions((prev) => !prev);
 
-  const {addLogo, draw} = useLogoAnimation({
-    logoRef,
-    isLoading: isImgLoading || isSoundLoading,
-    isDetectCollisions,
-  });
-
   const spawnN = (n: number) => {
     new Array(n).fill(null).forEach(() => addLogo());
   };
 
+  // Side-effects
   useEffect(() => {
     isMuted ? (Tone.Destination.mute = true) : (Tone.Destination.mute = false);
   }, [isMuted]);
 
+  const searchParams = new URLSearchParams(
+    window.location.search.replace("?", "")
+  );
+  const isIframe = searchParams.get("iframe") === "true";
+
   return (
     <>
-      <CanvasContainer>
+      <CanvasContainer isIframe={isIframe}>
         <Canvas
           draw={draw}
           params={{
