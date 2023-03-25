@@ -12,16 +12,19 @@ const ButtonElement = styled(IconButton)`
 
 const P = styled.p`
   position: absolute;
-  right: 0.5rem;
-  bottom: -2rem;
+  right: 0.9rem;
+  bottom: -2.3rem;
 `;
 
 interface Props {
   toggleMute: () => void;
   isMuted: boolean;
+  isSoundLoading: boolean;
 }
 
-const MuteButton = ({toggleMute, isMuted}: Props) => {
+const MuteButton = ({toggleMute, isMuted, isSoundLoading}: Props) => {
+  if (isSoundLoading) return null;
+
   return (
     <>
       <ButtonElement

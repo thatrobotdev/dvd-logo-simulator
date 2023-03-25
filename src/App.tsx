@@ -57,7 +57,11 @@ const App = () => {
           }}
           sampler={samplerRef.current}
         />
-        <MuteButton toggleMute={toggleMute} isMuted={isMuted} />
+        <MuteButton
+          toggleMute={toggleMute}
+          isMuted={isMuted}
+          isSoundLoading={isSoundLoading}
+        />
       </CanvasContainer>
       <Controls
         spawnN={spawnN}
