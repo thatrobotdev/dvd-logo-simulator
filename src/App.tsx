@@ -110,8 +110,8 @@ const App = () => {
         <Button onClick={addLogo} variant="contained">
           Add logo
         </Button>
-        <Button onClick={() => spawnN(10)} variant="contained">
-          Add 10 logos
+        <Button onClick={() => spawnN(5)} variant="contained">
+          Add 5 logos
         </Button>
         <FormControlLabel
           control={
