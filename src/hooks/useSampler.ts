@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import * as Tone from "tone";
 import {Sampler} from "tone";
 import click from "../audio/click.wav";
