@@ -7,12 +7,16 @@ const ControlsContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  margin-top: 3.5rem;
-  margin-left: 0.2rem;
+  margin: 3.5rem auto 0;
+  width: 95%;
+`;
+
+const SliderContainer = styled.div`
   width: 100%;
 `;
 
-const Buttons = styled.div`
+const Flex = styled.div`
+  width: 100%;
   display: flex;
   gap: 1rem;
 `;
@@ -34,25 +38,30 @@ const Controls = ({
 
   return (
     <ControlsContainer>
-      <Slider
-        aria-label="Speed"
-        value={sliderValue}
-        // @ts-expect-error
-        onChange={(e, value) => setSliderValue(value)}
-        // @ts-expect-error
-        onChangeCommitted={(e, value) => setSpeed(value)}
-        min={1}
-        max={100}
-        defaultValue={20}
-      />
-      <Buttons>
+      <SliderContainer>
+        <p>Animation speed</p>
+        <Slider
+          className="slider"
+          aria-label="Speed"
+          value={sliderValue}
+          // @ts-expect-error
+          onChange={(e, value) => setSliderValue(value)}
+          // @ts-expect-error
+          onChangeCommitted={(e, value) => setSpeed(value)}
+          min={1}
+          max={100}
+          defaultValue={20}
+        />
+      </SliderContainer>
+
+      <Flex>
         <Button onClick={() => spawnN(1)} variant="contained">
           Add logo
         </Button>
         <Button onClick={() => spawnN(5)} variant="contained">
           Add 5 logos
         </Button>
-      </Buttons>
+      </Flex>
       <FormControlLabel
         control={
           <Switch
@@ -60,7 +69,7 @@ const Controls = ({
             onChange={toggleDetectCollisions}
           />
         }
-        label="Detect collisions between logos (experimental)"
+        label="Logos bounce off each other (experimental)"
       />
     </ControlsContainer>
   );
