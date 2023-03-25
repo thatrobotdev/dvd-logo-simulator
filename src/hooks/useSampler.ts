@@ -19,17 +19,21 @@ const useSampler = () => {
     ).toDestination()
   );
 
-  const toggleMute = async () => {
+  const mute = () => {
+    setIsMuted(true);
+    Tone.Destination.mute = true;
+  };
+
+  const unmute = async () => {
     if (isSoundLoading) {
       await Tone.start();
       setIsSoundLoading(false);
     }
-    setIsMuted((prevState) => !prevState);
+    setIsMuted(false);
+    Tone.Destination.mute = false;
   };
 
-  useEffect(() => {
-    isMuted ? (Tone.Destination.mute = true) : (Tone.Destination.mute = false);
-  }, [isMuted]);
+  const toggleMute = () => (isMuted ? unmute() : mute());
 
   return {samplerRef, isSoundLoading, isMuted, toggleMute};
 };
