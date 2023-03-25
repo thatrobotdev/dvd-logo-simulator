@@ -1,3 +1,4 @@
+import { Skeleton} from "@mui/material";
 import {useState} from "react";
 import styled from "styled-components";
 import Canvas from "./classes/Canvas";
@@ -32,9 +33,11 @@ const App = () => {
 
   const {logoRef, isImgLoading, onImgLoad} = useLogoImage();
 
+  const isLoading = isSoundLoading || isImgLoading;
+
   const {draw, spawnN} = useLogoAnimation({
     logoRef,
-    isLoading: isImgLoading || isSoundLoading,
+    isLoading,
     isDetectCollisions,
     distancePerStep: speed / 10,
   });
@@ -51,6 +54,9 @@ const App = () => {
   return (
     <AppContainer isIframe={isIframe}>
       <CanvasContainer>
+        {isLoading && (
+          <Skeleton variant="rectangular" width="100%" height="500px" />
+        )}
         <Canvas
           draw={draw}
           params={{
