@@ -1,3 +1,9 @@
+*,
+:after,
+:before {
+  box-sizing: border-box;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -22,7 +28,6 @@
   content: "";
   display: block;
   position: absolute;
-  left: -6px;
   top: -6px;
   height: 100%;
   width: 100%;
