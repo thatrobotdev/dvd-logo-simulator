@@ -22,9 +22,11 @@ export class DVDLogo {
   objectBottomCollision = false;
   objectTopCollision = false;
 
-  color = "blue";
+  // Drawing dimensions, not source dimensions
   width = 64;
   height = 33;
+
+  colorIndex = getRandomInt(0, 7);
 
   constructor(
     distancePerStep: number,
@@ -79,6 +81,12 @@ export class DVDLogo {
     }
   };
 
+  private changeColor = () => {
+    const colors = [...Array(8).keys()].filter((el) => el !== this.colorIndex);
+    const possibleColors = colors.filter((el) => el !== this.colorIndex);
+    this.colorIndex = possibleColors[getRandomInt(0, possibleColors.length)];
+  };
+
   /* Check if velocity values on this step would cause circle to exit canvas on next step.
    * If so, set flags so that direction will change on the next step
    * Also, trigger sounds!
@@ -90,16 +98,20 @@ export class DVDLogo {
     if (this.x + this.deltaX > ctx.canvas.width - this.width) {
       this.canvasRightCollision = true;
       sampler.triggerAttack("C4");
+      this.changeColor();
     } else if (this.x + this.deltaX < 0) {
       this.canvasLeftCollision = true;
       sampler.triggerAttack("C4");
+      this.changeColor();
     }
     if (this.y + this.deltaY > ctx.canvas.height - this.height) {
       this.canvasBottomCollision = true;
       sampler.triggerAttack("C4");
+      this.changeColor();
     } else if (this.y + this.deltaY < 0) {
       this.canvasTopCollision = true;
       sampler.triggerAttack("C4");
+      this.changeColor();
     }
   };
 
@@ -163,7 +175,7 @@ export class DVDLogo {
   };
 
   private paint = (ctx: CanvasRenderingContext2D) => {
-    const imgNode = this.logoRef.current[0];
+    const imgNode = this.logoRef.current[this.colorIndex];
     if (imgNode) {
       ctx.drawImage(imgNode, this.x, this.y, this.width, this.height);
       ctx.strokeRect(this.x, this.y, this.width, this.height);
