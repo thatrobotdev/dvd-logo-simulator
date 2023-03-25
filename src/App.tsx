@@ -1,16 +1,16 @@
-import Canvas from "./Canvas";
-import useLogoAnimation from "./useLogoAnimation";
-import DVDlogo from "./DVDLogo.png";
 import {useEffect, useRef, useState} from "react";
+import styled from "styled-components";
+import * as Tone from "tone";
 import {Sampler} from "tone";
+import Canvas from "./Canvas";
 import click from "./click.wav";
 import click2 from "./click2.wav";
-import * as Tone from "tone";
-import IconButton from "@mui/material/IconButton";
-import VolumeOff from "@mui/icons-material/VolumeOff";
-import VolumeUp from "@mui/icons-material/VolumeUp";
-import {Button, FormControlLabel, Switch} from "@mui/material";
-import styled from "styled-components";
+import Author from "./components/Author";
+import Controls from "./components/Controls";
+import MuteButton from "./components/MuteButton";
+import SourceImage from "./components/SourceImage";
+import useLogoAnimation from "./useLogoAnimation";
+
 interface AppContainerProps {
   isIframe: boolean;
 }
@@ -21,21 +21,6 @@ const AppContainer = styled.div<AppContainerProps>`
 
 const CanvasContainer = styled.div`
   position: relative;
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-top: 1rem;
-`;
-
-const MuteButton = styled(IconButton)`
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  color: white;
 `;
 
 const App = () => {
@@ -110,42 +95,17 @@ const App = () => {
           }}
           sampler={samplerRef.current}
         />
-        <MuteButton
-          onClick={toggleMute}
-          aria-label={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? <VolumeOff /> : <VolumeUp />}
-        </MuteButton>
+        <MuteButton toggleMute={toggleMute} isMuted={isMuted} />
       </CanvasContainer>
-      <Buttons>
-        <Button onClick={addLogo} variant="contained">
-          Add logo
-        </Button>
-        <Button onClick={() => spawnN(5)} variant="contained">
-          Add 5 logos
-        </Button>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={isDetectCollisions}
-              onChange={toggleDetectCollisions}
-            />
-          }
-          label="Detect collisions between logos (experimental)"
-        />
-      </Buttons>
-      <div style={{display: "none"}}>
-        {/* Alt not needed, img is just a source for the canvas */}
-        {/* eslint-disable-next-line jsx-a11y/alt-text */}
-        <img
-          id="DVDlogo"
-          src={DVDlogo}
-          width="128"
-          height="62"
-          ref={logoRef}
-          onLoad={onImgLoad}
-        />
-      </div>
+      <Controls
+        addLogo={addLogo}
+        spawnN={spawnN}
+        isDetectCollisions={isDetectCollisions}
+        toggleDetectCollisions={toggleDetectCollisions}
+      />
+
+      {!isIframe ? <Author /> : null}
+      <SourceImage logoRef={logoRef} onImgLoad={onImgLoad} />
     </AppContainer>
   );
 };
