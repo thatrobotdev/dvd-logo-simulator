@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import * as Tone from "tone";
 import {Sampler} from "tone";
 import click from "../audio/click.wav";
@@ -7,6 +7,10 @@ import click2 from "../audio/click2.wav";
 const useSampler = () => {
   const [isSoundLoading, setIsSoundLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+
+  useEffect(() => {
+    mute();
+  }, []);
 
   const samplerRef = useRef(
     new Sampler(
