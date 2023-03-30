@@ -26,7 +26,7 @@ const App = () => {
   const DEBUG = false;
   const DRAW_RECT = false;
 
-  const [isDetectCollisions, setIsDetectCollisions] = useState(false);
+  const [isDetectCollisions, setIsDetectCollisions] = useState(true);
   const [speed, setSpeed] = useState(20);
 
   const {samplerRef, isSoundLoading, isMuted, toggleMute} = useSampler();
