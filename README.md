@@ -1,5 +1,7 @@
 # Ultimate bouncing DVD logo simulator
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4c91f5de-3115-452f-9ac7-f2263efd8e3a/deploy-status)](https://app.netlify.com/sites/dvd-logo-simulator/deploys)
+
 [dvdlogosimulator.com](https://www.dvdlogosimulator.com)
 
 A dose of nostalgia - watch the logo bounce around the screen and make sounds when it hits the edges. Users can spawn more logos, change the speed, and other settings!
