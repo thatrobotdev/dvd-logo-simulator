@@ -1,12 +1,6 @@
-import styled from "styled-components";
-
-const P = styled.p`
-  margin-top: 2rem;
-`;
-
 const Author = () => {
   return (
-    <P>
+    <p>
       Project by{" "}
       <a
         href="https://www.stephenbradshaw.dev"
@@ -15,7 +9,7 @@ const Author = () => {
       >
         Stephen Bradshaw
       </a>
-    </P>
+    </p>
   );
 };
 

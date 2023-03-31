@@ -2,7 +2,6 @@ import {Skeleton} from "@mui/material";
 import {useState} from "react";
 import styled from "styled-components";
 import Canvas from "./classes/Canvas";
-import Author from "./components/Author";
 import Controls from "./components/Controls";
 import MuteButton from "./components/MuteButton";
 import SourceImage from "./components/SourceImage";
@@ -76,8 +75,8 @@ const App = () => {
         isDetectCollisions={isDetectCollisions}
         toggleDetectCollisions={toggleDetectCollisions}
         setSpeed={setSpeed}
+        isIframe={isIframe}
       />
-      {!isIframe ? <Author /> : null}
       <SourceImage logoRef={logoRef} onImgLoad={onImgLoad} />
     </AppContainer>
   );

@@ -1,6 +1,7 @@
 import {Button, FormControlLabel, Slider, Switch} from "@mui/material";
 import {useState} from "react";
 import styled from "styled-components";
+import Author from "./Author";
 
 const ControlsContainer = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ interface Props {
   isDetectCollisions: boolean;
   toggleDetectCollisions: () => void;
   setSpeed: React.Dispatch<React.SetStateAction<number>>;
+  isIframe: boolean;
 }
 
 const Controls = ({
@@ -33,6 +35,7 @@ const Controls = ({
   isDetectCollisions,
   toggleDetectCollisions,
   setSpeed,
+  isIframe,
 }: Props) => {
   const [sliderValue, setSliderValue] = useState(20);
 
@@ -71,6 +74,7 @@ const Controls = ({
         }
         label="Logos bounce off each other (experimental)"
       />
+      {!isIframe ? <Author /> : null}
     </ControlsContainer>
   );
 };
