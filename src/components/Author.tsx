@@ -1,14 +1,14 @@
 const Author = () => {
   return (
     <p>
-      Project by{" "}
+      Original Project by{" "}
       <a
         href="https://www.stephenbradshaw.dev"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Stephen Bradshaw
-      </a>
+        Stephen Bradshaw.</a> Modified (very slightly ;)) by JP Kerrane for Computer Science Honor Society.
+      
     </p>
   );
 };

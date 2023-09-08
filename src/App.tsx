@@ -60,7 +60,7 @@ const App = () => {
             DEBUG,
             DRAW_RECT,
             canvasWidth: "100%",
-            canvasHeight: "500px",
+            canvasHeight: "60vh",
           }}
           sampler={samplerRef.current}
         />
@@ -70,6 +70,8 @@ const App = () => {
           isSoundLoading={isSoundLoading}
         />
       </CanvasContainer>
+      <marquee style={{fontSize: 50}}>Scan the QR code to sign up for CSHS!!!</marquee>
+      <marquee style={{fontSize: 50}}>(or you can go to url.peaktopeak.org/builder)</marquee>
       <Controls
         spawnN={spawnN}
         isDetectCollisions={isDetectCollisions}

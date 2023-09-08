@@ -42,8 +42,6 @@ const SourceImage = ({logoRef, onImgLoad}: Props) => {
             alt=""
             id={`logo${i}`}
             src={el}
-            width="187"
-            height="73"
             ref={(el) => (logoRef.current[i] = el)}
             onLoad={() => handleLoad(i)}
           />

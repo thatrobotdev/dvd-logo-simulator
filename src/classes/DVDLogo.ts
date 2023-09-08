@@ -23,8 +23,8 @@ export class DVDLogo {
   objectTopCollision = false;
 
   // Drawing dimensions, not source dimensions
-  width = 100;
-  height = 44;
+  width = 150;
+  height = 150;
 
   colorIndex = getRandomInt(0, 7);
 
