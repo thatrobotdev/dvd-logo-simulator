@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/dvd-logo-simulator/static/css/main.a6cc00aa.css",
+    "main.js": "/dvd-logo-simulator/static/js/main.b6d18afe.js",
+    "static/media/dvdlogo-01.png": "/dvd-logo-simulator/static/media/dvdlogo-01.3abe133adc21448f6671.png",
+    "static/media/dvdlogo-02.png": "/dvd-logo-simulator/static/media/dvdlogo-02.011c47fcd11f3205ad4a.png",
+    "static/media/dvdlogo-03.png": "/dvd-logo-simulator/static/media/dvdlogo-03.3644764af57d773f1a5e.png",
+    "static/media/click2.wav": "/dvd-logo-simulator/static/media/click2.10862af04b9518d966f3.wav",
+    "static/media/click.wav": "/dvd-logo-simulator/static/media/click.0a1252cbb125fff367d5.wav",
+    "index.html": "/dvd-logo-simulator/index.html",
+    "main.a6cc00aa.css.map": "/dvd-logo-simulator/static/css/main.a6cc00aa.css.map",
+    "main.b6d18afe.js.map": "/dvd-logo-simulator/static/js/main.b6d18afe.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a6cc00aa.css",
+    "static/js/main.b6d18afe.js"
+  ]
+}
